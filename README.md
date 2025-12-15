@@ -1,3 +1,111 @@
+# Task Manager (Monorepo)
+
+Full-stack task manager built with:
+...
+## Troubleshooting
+- Backend port in use: stop other processes on 4000 or change `PORT`.
+- Prisma errors in OneDrive: move repo out of OneDrive.
+- CORS/auth: ensure `CORS_ORIGIN` matches your frontend URL.
+Placeholder README.
+
+Full-stack task manager built with:
+- Frontend: Vite + React + TypeScript, Tailwind CSS, React Query, React Router, React Hook Form + Zod
+- Backend: Node.js + Express (TypeScript), Prisma, Socket.io, JWT auth (HttpOnly cookies)
+- Database: SQLite for local dev; Postgres recommended for production
+
+## Project Structure
+
+```
+Task manager/
+├─ frontend/                 # React app (Vite)
+│  ├─ src/                   # Pages, components, api clients, hooks
+│  ├─ package.json
+│  └─ vite.config.ts
+├─ backend/                  # Express API (TypeScript)
+│  ├─ src/                   # Controllers, services, repositories, middleware
+│  ├─ prisma/                # Prisma schemas & migrations (SQLite dev)
+│  ├─ tests/                 # Jest unit tests (optional)
+│  ├─ package.json
+│  └─ tsconfig.json
+└─ README.md
+```
+
+## Prerequisites
+- Node.js 20+
+- npm
+
+## Local Development
+
+Backend (SQLite dev mode):
+```powershell
+cd "C:\Users\HP\OneDrive\Desktop\Task manager\backend"
+npm install
+npm run prisma:generate:sqlite
+npm run prisma:migrate:sqlite
+npm run dev
+```
+
+Frontend:
+```powershell
+cd "C:\Users\HP\OneDrive\Desktop\Task manager\frontend"
+npm install
+npm run dev
+```
+
+App URLs:
+- Frontend: http://localhost:5173
+- Backend: http://localhost:4000 (health: /api/v1/health)
+
+Notes:
+- OneDrive may lock Prisma binaries; if you see EPERM errors, move the project to a non-OneDrive folder (e.g., `C:\Projects\TaskManager`).
+
+## Environment Variables
+
+Backend:
+- `JWT_SECRET` (required): any long random string
+- `CORS_ORIGIN` (required): frontend URL (default `http://localhost:5173`)
+- `DATABASE_URL` (optional for Postgres)
+
+Frontend:
+- `VITE_API_URL` (optional): backend base URL (defaults to `http://localhost:4000`)
+
+## Testing (optional)
+Run backend unit tests:
+```powershell
+cd "C:\Users\HP\OneDrive\Desktop\Task manager\backend"
+npm test
+```
+
+## Deployment
+
+Recommended free-friendly setup:
+- Frontend: Vercel
+- Backend: Render (Web Service)
+
+Backend (Render):
+- Build: `npm install && npm run prisma:generate:sqlite && npm run build`
+- Start: `npm run start`
+- Env: `JWT_SECRET`, `CORS_ORIGIN` (set to your frontend URL)
+
+Frontend (Vercel):
+- Build: `npm run build`
+- Output: `dist`
+- Env: `VITE_API_URL` set to your Render backend URL
+
+For persistence, provision Postgres and set `DATABASE_URL`, then switch Prisma to use `schema.prisma` and run migrations.
+
+## Features
+- Register/Login with JWT in HttpOnly cookies
+- Create, assign, update, delete tasks
+- Real-time notifications and updates via Socket.io
+- Dashboard with Assigned, Created, and Overdue sections
+- Form validation with Zod
+- Polished UI with Tailwind and reusable components
+
+## Troubleshooting
+- Backend port in use: stop other processes on 4000 or change `PORT`.
+- Prisma engine EPERM on OneDrive: move repo out of OneDrive.
+- CORS/auth: ensure `CORS_ORIGIN` matches your frontend URL.
 # Collaborative Task Manager (Full-Stack)
 
 A production-ready full-stack Task Management application with authentication, task CRUD, real-time collaboration via Socket.io, and a responsive UI.
@@ -11,7 +119,6 @@ A production-ready full-stack Task Management application with authentication, t
 
 - frontend/ — Vite React TS app
 - backend/ — Express TS API with Prisma and Socket.io
-- docker-compose.yml — Local stack with Postgres, API, and UI
 
 ## Why PostgreSQL + Prisma
 
@@ -64,15 +171,7 @@ Frontend default: http://localhost:5173
 
 Cookies are HttpOnly; ensure same-site/cors set per your hostnames.
 
-## One-Command Local (Docker)
 
-```bash
-docker compose up --build
-```
-
-- Frontend: http://localhost:5173
-- Backend: http://localhost:4000
-- Postgres: port 5432 (internal), service `db`
 
 ## API Contract (v1)
 
