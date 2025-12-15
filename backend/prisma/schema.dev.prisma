@@ -1,0 +1,64 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+// Enums are not supported on SQLite in this setup; use strings instead.
+
+model User {
+  id            String         @id @default(cuid())
+  email         String         @unique
+  name          String
+  password      String
+  tasksCreated  Task[]         @relation("TasksCreated")
+  tasksAssigned Task[]         @relation("TasksAssigned")
+  notifications Notification[]
+  auditLogs     AuditLog[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+}
+
+model Task {
+  id             String         @id @default(cuid())
+  title          String
+  description    String
+  dueDate        DateTime
+  priority       String
+  status         String         @default("ToDo")
+  creator        User           @relation("TasksCreated", fields: [creatorId], references: [id])
+  creatorId      String
+  assignedTo     User?          @relation("TasksAssigned", fields: [assignedToId], references: [id])
+  assignedToId   String?
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  auditLogs      AuditLog[]
+  notifications  Notification[]
+}
+
+model Notification {
+  id        String            @id @default(cuid())
+  user      User              @relation(fields: [userId], references: [id])
+  userId    String
+  task      Task              @relation(fields: [taskId], references: [id])
+  taskId    String
+  type      String
+  message   String
+  read      Boolean           @default(false)
+  createdAt DateTime          @default(now())
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  task      Task     @relation(fields: [taskId], references: [id])
+  taskId    String
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  field     String
+  fromValue String?
+  toValue   String?
+  createdAt DateTime @default(now())
+}
