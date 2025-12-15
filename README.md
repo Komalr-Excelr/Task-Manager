@@ -79,7 +79,7 @@ npm test
 ## Deployment
 
 Recommended free-friendly setup:
-- Frontend: Vercel
+- Frontend: Netlify or Vercel
 - Backend: Render (Web Service)
 
 Backend (Render):
@@ -87,9 +87,17 @@ Backend (Render):
 - Start: `npm run start`
 - Env: `JWT_SECRET`, `CORS_ORIGIN` (set to your frontend URL)
 
+Frontend (Netlify):
+- The repository is configured with `netlify.toml` for easy deployment
+- Build: `npm install && npm run build` (configured automatically)
+- Publish directory: `frontend/dist` (configured automatically)
+- Env: `VITE_API_URL` set to your Render backend URL
+- Deploy: Connect your GitHub repo to Netlify, it will auto-detect the configuration
+
 Frontend (Vercel):
 - Build: `npm run build`
 - Output: `dist`
+- Root Directory: `frontend`
 - Env: `VITE_API_URL` set to your Render backend URL
 
 For persistence, provision Postgres and set `DATABASE_URL`, then switch Prisma to use `schema.prisma` and run migrations.
